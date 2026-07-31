@@ -80,6 +80,18 @@ export default function Home() {
       </header>
 
       <section className="hero" id="top">
+        <video
+          className="hero-video"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+        >
+          <source src="/hero-tarot.mp4" type="video/mp4" />
+        </video>
+        <div className="hero-overlay" aria-hidden="true" />
         <div className="stars" aria-hidden="true">
           ✦　·　✧　　·　✦　·　　✧
         </div>
@@ -100,10 +112,6 @@ export default function Home() {
           <a className="text-link" href="#about">
             Discover MagJacky ↓
           </a>
-        </div>
-        <div className="moon" aria-hidden="true">
-          <span>☾</span>
-          <i>✦</i>
         </div>
       </section>
 

@@ -1,65 +1,325 @@
-import Image from "next/image";
+"use client";
+
+import { FormEvent, useState } from "react";
+
+const services = [
+  {
+    symbol: "☾",
+    title: "Intuitive Tarot",
+    text: "A grounded reading for the question that keeps circling back.",
+  },
+  {
+    symbol: "✦",
+    title: "Astrology Insight",
+    text: "Understand the patterns, timing, and invitations written in your chart.",
+  },
+  {
+    symbol: "◐",
+    title: "AI + Human Readings",
+    text: "Thoughtful technology guided by human intuition, context, and care.",
+  },
+];
+
+const faqs = [
+  [
+    "What can I ask about?",
+    "Bring a relationship, career decision, creative block, transition, or any question that needs a clearer perspective.",
+  ],
+  [
+    "Do I need to know tarot or astrology?",
+    "Not at all. Every reading is explained in warm, everyday language and centered on your real life.",
+  ],
+  [
+    "Is this fortune-telling?",
+    "MagJacky is about reflection and possibility—not fixed predictions. You always remain the author of your choices.",
+  ],
+];
 
 export default function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [email, setEmail] = useState("");
+
+  function submitReading(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSubmitted(true);
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between bg-white px-16 py-32 sm:items-start dark:bg-black">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl leading-10 font-semibold tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main>
+      <header className="site-header">
+        <a className="brand" href="#top" aria-label="MagJacky home">
+          MAGJACKY
+        </a>
+        <button
+          className="menu-button"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-expanded={menuOpen}
+          aria-label="Toggle navigation"
+        >
+          {menuOpen ? "×" : "☰"}
+        </button>
+        <nav
+          className={menuOpen ? "nav open" : "nav"}
+          aria-label="Main navigation"
+        >
+          <a href="#about" onClick={() => setMenuOpen(false)}>
+            About
+          </a>
+          <a href="#readings" onClick={() => setMenuOpen(false)}>
+            Readings
+          </a>
+          <a href="#faq" onClick={() => setMenuOpen(false)}>
+            FAQ
+          </a>
+          <button className="nav-cta" onClick={() => setModalOpen(true)}>
+            Begin a reading
+          </button>
+        </nav>
+      </header>
+
+      <section className="hero" id="top">
+        <div className="stars" aria-hidden="true">
+          ✦　·　✧　　·　✦　·　　✧
+        </div>
+        <p className="eyebrow">INTUITIVE GUIDANCE FOR MODERN LIFE</p>
+        <h1>
+          Clarity for the
+          <br />
+          <em>path ahead.</em>
+        </h1>
+        <p className="hero-copy">
+          Tarot, astrology, and thoughtful AI come together to help you hear
+          what your intuition has been saying all along.
+        </p>
+        <div className="hero-actions">
+          <button className="primary" onClick={() => setModalOpen(true)}>
+            Begin your reading <span>→</span>
+          </button>
+          <a className="text-link" href="#about">
+            Discover MagJacky ↓
+          </a>
+        </div>
+        <div className="moon" aria-hidden="true">
+          <span>☾</span>
+          <i>✦</i>
+        </div>
+      </section>
+
+      <section className="intro section" id="about">
+        <p className="section-number">01 — ABOUT</p>
+        <div>
+          <h2>
+            You already know more
+            <br />
+            than you think.
+          </h2>
+          <p>
+            MagJacky creates a quiet place to listen. Our readings blend ancient
+            symbolic systems with compassionate, modern guidance—never fear,
+            never absolutes, always centered on your agency.
+          </p>
+          <p>
+            Come with a question. Leave with language for what you feel and a
+            next step that is yours to choose.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="bg-foreground text-background flex h-12 w-full items-center justify-center gap-2 rounded-full px-5 transition-colors hover:bg-[#383838] md:w-[158px] dark:hover:bg-[#ccc]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] md:w-[158px] dark:border-white/[.145] dark:hover:bg-[#1a1a1a]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <section className="readings section" id="readings">
+        <div className="section-heading">
+          <p className="section-number">02 — READINGS</p>
+          <h2>Choose your doorway.</h2>
+          <p>Every path begins with one honest question.</p>
         </div>
-      </main>
-    </div>
+        <div className="service-grid">
+          {services.map((service, index) => (
+            <article className="service-card" key={service.title}>
+              <span className="card-index">0{index + 1}</span>
+              <div className="card-symbol" aria-hidden="true">
+                {service.symbol}
+              </div>
+              <h3>{service.title}</h3>
+              <p>{service.text}</p>
+              <button onClick={() => setModalOpen(true)}>
+                Explore this reading <span>↗</span>
+              </button>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="sample section">
+        <div className="sample-copy">
+          <p className="section-number">A THREE-CARD MOMENT</p>
+          <h2>
+            Past. Present.
+            <br />
+            <em>Possibility.</em>
+          </h2>
+          <p>
+            A simple spread can shift the light. Tap a card to imagine what
+            might be waiting beneath it.
+          </p>
+          <button className="primary" onClick={() => setModalOpen(true)}>
+            Draw your cards <span>→</span>
+          </button>
+        </div>
+        <div className="tarot-stack" aria-label="Three decorative tarot cards">
+          {["THE ROOT", "THE MIRROR", "THE OPENING"].map((label, index) => (
+            <button
+              key={label}
+              className={`tarot-card card-${index + 1}`}
+              onClick={() => setModalOpen(true)}
+            >
+              <span>✦</span>
+              <b>{label}</b>
+              <small>MAGJACKY</small>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="testimonial section">
+        <span className="quote-mark">“</span>
+        <blockquote>
+          I didn’t need someone to tell me what would happen. I needed help
+          recognizing what I already knew. That is exactly what this gave me.
+        </blockquote>
+        <p>— A MAGJACKY READER</p>
+      </section>
+
+      <section className="faq section" id="faq">
+        <div>
+          <p className="section-number">03 — QUESTIONS</p>
+          <h2>
+            A little more
+            <br />
+            light on things.
+          </h2>
+        </div>
+        <div className="faq-list">
+          {faqs.map(([question, answer]) => (
+            <details key={question}>
+              <summary>
+                {question}
+                <span>+</span>
+              </summary>
+              <p>{answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section className="newsletter section">
+        <div>
+          <p className="eyebrow">NOTES FROM THE IN-BETWEEN</p>
+          <h2>
+            A thoughtful message,
+            <br />
+            when the timing is right.
+          </h2>
+        </div>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            setEmail("");
+          }}
+        >
+          <label className="sr-only" htmlFor="email">
+            Email address
+          </label>
+          <input
+            id="email"
+            type="email"
+            required
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="Your email address"
+          />
+          <button aria-label="Subscribe">→</button>
+        </form>
+      </section>
+
+      <footer>
+        <a className="brand" href="#top">
+          MAGJACKY
+        </a>
+        <p>Intuition, made easier to hear.</p>
+        <div>
+          <a href="#about">About</a>
+          <a href="#readings">Readings</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <small>© 2026 MagJacky. For reflection and entertainment.</small>
+      </footer>
+
+      {modalOpen && (
+        <div
+          className="modal-backdrop"
+          role="presentation"
+          onMouseDown={() => setModalOpen(false)}
+        >
+          <div
+            className="modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="reading-title"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <button
+              className="modal-close"
+              onClick={() => setModalOpen(false)}
+              aria-label="Close"
+            >
+              ×
+            </button>
+            {submitted ? (
+              <div className="success">
+                <span>✦</span>
+                <h2>Your question is received.</h2>
+                <p>
+                  This is the beginning of a more thoughtful reading experience.
+                  We’ll be ready to continue soon.
+                </p>
+                <button
+                  className="primary"
+                  onClick={() => {
+                    setModalOpen(false);
+                    setSubmitted(false);
+                  }}
+                >
+                  Close
+                </button>
+              </div>
+            ) : (
+              <>
+                <p className="eyebrow">BEGIN A READING</p>
+                <h2 id="reading-title">What’s asking for your attention?</h2>
+                <p>
+                  Share the question you’re sitting with. Keep it as simple or
+                  detailed as you like.
+                </p>
+                <form onSubmit={submitReading}>
+                  <label htmlFor="name">Your name</label>
+                  <input id="name" required placeholder="First name" />
+                  <label htmlFor="question">Your question</label>
+                  <textarea
+                    id="question"
+                    required
+                    rows={4}
+                    placeholder="I’m looking for clarity about…"
+                  />
+                  <button className="primary" type="submit">
+                    Continue <span>→</span>
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </main>
   );
 }

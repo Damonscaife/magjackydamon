@@ -120,21 +120,25 @@ export default function Home() {
             >
               <source src="/about-magjacky.mp4" type="video/mp4" />
             </video>
+            <div className="about-video-overlay" aria-hidden="true" />
+            <div className="about-video-copy">
+              <p className="eyebrow">A QUIET PLACE TO LISTEN</p>
+              <h2>
+                You already know more
+                <br />
+                than you think.
+              </h2>
+              <p>
+                MagJacky blends ancient symbolic systems with compassionate,
+                modern guidance—never fear, never absolutes, always centered on
+                your agency.
+              </p>
+              <p>
+                Come with a question. Leave with language for what you feel and
+                a next step that is yours to choose.
+              </p>
+            </div>
           </div>
-          <h2>
-            You already know more
-            <br />
-            than you think.
-          </h2>
-          <p>
-            MagJacky creates a quiet place to listen. Our readings blend ancient
-            symbolic systems with compassionate, modern guidance—never fear,
-            never absolutes, always centered on your agency.
-          </p>
-          <p>
-            Come with a question. Leave with language for what you feel and a
-            next step that is yours to choose.
-          </p>
         </div>
       </section>
 

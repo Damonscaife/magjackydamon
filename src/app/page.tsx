@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import DailyCosmicPortal from "@/components/DailyCosmicPortal";
 
 export default function Home() {
@@ -57,6 +58,9 @@ export default function Home() {
           </a>
           <a href="#daily-reading" onClick={() => setMenuOpen(false)}>
             Daily reading
+          </a>
+          <a href="#careers" onClick={() => setMenuOpen(false)}>
+            Careers
           </a>
           <button className="nav-cta" onClick={() => setModalOpen(true)}>
             Begin a reading
@@ -140,6 +144,44 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="careers section" id="careers">
+        <div className="careers-heading">
+          <p className="section-number">02 — CAREERS</p>
+          <h2>Meet this week’s top performer.</h2>
+          <p>
+            We believe the best teams make room for curiosity, kindness, and a
+            well-timed break outside.
+          </p>
+        </div>
+        <article className="employee-feature">
+          <div className="employee-portrait">
+            <Image
+              src="/employee-of-the-week-corgi.png"
+              alt="A tan Corgi and Jack Russell Terrier mix wearing a professional charcoal suit and gold tie"
+              width={1024}
+              height={1536}
+              sizes="(max-width: 900px) 88vw, 42vw"
+            />
+          </div>
+          <div className="employee-copy">
+            <p className="employee-label">EMPLOYEE OF THE WEEK</p>
+            <h3>Chief Morale Officer</h3>
+            <p className="employee-breed">Tan Corgi × Jack Russell Terrier</p>
+            <p>
+              MagJacky’s resident office dog brings equal parts focus and
+              enthusiasm to every workday. An expert in welcoming visitors,
+              supervising snack quality, and recognizing exactly when the team
+              needs a walk, this week’s honoree keeps the studio grounded,
+              cheerful, and moving forward.
+            </p>
+            <p className="careers-note">
+              Human opportunities will be posted here as the MagJacky team
+              grows.
+            </p>
+          </div>
+        </article>
+      </section>
+
       <footer id="contact">
         <a className="brand" href="#top">
           MAGJACKY
@@ -148,7 +190,7 @@ export default function Home() {
         <div className="footer-links" aria-label="Footer links coming soon">
           <span>Contact us</span>
           <span>Privacy</span>
-          <span>Careers</span>
+          <a href="#careers">Careers</a>
           <span>Terms</span>
           <span>Accessibility</span>
         </div>

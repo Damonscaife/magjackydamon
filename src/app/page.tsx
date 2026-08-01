@@ -4,10 +4,13 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import DailyCosmicPortal from "@/components/DailyCosmicPortal";
 
+const ABOUT_VIDEO_START_TIME = 2 / 30;
+
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [aboutVideoReady, setAboutVideoReady] = useState(false);
   const aboutVideoRef = useRef<HTMLVideoElement>(null);
   const aboutRestartTimeout = useRef<number | null>(null);
 
@@ -25,7 +28,7 @@ export default function Home() {
     if (!video) return;
 
     aboutRestartTimeout.current = window.setTimeout(() => {
-      video.currentTime = 0;
+      video.currentTime = ABOUT_VIDEO_START_TIME;
       void video.play();
     }, 2000);
   }
@@ -112,11 +115,15 @@ export default function Home() {
         <div className="about-video-frame">
           <video
             ref={aboutVideoRef}
-            className="about-video"
+            className={aboutVideoReady ? "about-video ready" : "about-video"}
             autoPlay
             muted
             playsInline
             preload="metadata"
+            onLoadedMetadata={(event) => {
+              event.currentTarget.currentTime = ABOUT_VIDEO_START_TIME;
+            }}
+            onSeeked={() => setAboutVideoReady(true)}
             onEnded={restartAboutVideoAfterPause}
             aria-label="A message from MagJacky"
           >

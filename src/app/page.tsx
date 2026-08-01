@@ -4,7 +4,9 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import DailyCosmicPortal from "@/components/DailyCosmicPortal";
 
-const ABOUT_VIDEO_START_TIME = 2 / 30;
+// The source file opens with a brief storyboard/contact-sheet flash.
+// Start on the first clean shot so those production frames are never shown.
+const ABOUT_VIDEO_START_TIME = 0.25;
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);

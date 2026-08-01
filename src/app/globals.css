@@ -185,8 +185,6 @@ blockquote {
   padding: 120px 8vw;
 }
 .intro {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
   background: #f1e9dc;
   color: #1b1218;
 }
@@ -198,34 +196,12 @@ blockquote {
   line-height: 0.95;
   margin: 0 0 40px;
 }
-.intro > div:last-child {
-  max-width: 760px;
-}
 .about-video-frame {
   position: relative;
-  min-height: 680px;
-  padding: 1px;
+  width: 100%;
+  min-height: max(680px, 78svh);
   overflow: hidden;
   background: #120c12;
-  border: 1px solid #8b6e3f66;
-  box-shadow: 0 24px 70px #2c18232e;
-}
-.about-video-overlay {
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  background:
-    linear-gradient(90deg, #0b090ded 0%, #0b090d9c 58%, #0b090d28 100%),
-    linear-gradient(0deg, #0b090dd9 0%, transparent 58%);
-  pointer-events: none;
-}
-.about-video-frame::after {
-  content: "";
-  position: absolute;
-  z-index: 3;
-  inset: 12px;
-  border: 1px solid #f2eadc24;
-  pointer-events: none;
 }
 .about-video {
   position: absolute;
@@ -235,28 +211,12 @@ blockquote {
   object-fit: cover;
   background: #0b090d;
 }
-.about-video-copy {
-  position: absolute;
-  z-index: 2;
-  left: clamp(32px, 6vw, 72px);
-  right: clamp(32px, 8vw, 96px);
-  bottom: clamp(36px, 7vw, 76px);
-  max-width: 610px;
-  color: var(--cream);
+.about-copy {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
 }
-.intro .about-video-copy h2 {
-  margin: 24px 0 30px;
-  color: var(--cream);
-  font-size: clamp(48px, 5.5vw, 76px);
-  text-shadow: 0 3px 28px #000a;
-}
-.intro .about-video-copy p:not(.eyebrow) {
-  max-width: 560px;
-  margin: 10px 0 0;
-  color: #ded3d9;
-  font-size: 18px;
-  line-height: 1.55;
-  text-shadow: 0 2px 18px #000d;
+.about-copy-body {
+  max-width: 760px;
 }
 .intro p:not(.section-number) {
   font-family: var(--font-serif);
@@ -612,7 +572,7 @@ footer .footer-note {
   .hero-video {
     object-position: 60% center;
   }
-  .intro,
+  .about-copy,
   .sample,
   .faq {
     grid-template-columns: 1fr;
@@ -654,22 +614,10 @@ footer .footer-note {
     flex-direction: column;
   }
   .about-video-frame {
-    min-height: 720px;
+    min-height: 62svh;
   }
   .about-video {
     object-position: center;
-  }
-  .about-video-copy {
-    left: 28px;
-    right: 28px;
-    bottom: 38px;
-  }
-  .intro .about-video-copy h2 {
-    margin: 18px 0 24px;
-    font-size: clamp(42px, 13vw, 58px);
-  }
-  .intro .about-video-copy p:not(.eyebrow) {
-    font-size: 17px;
   }
   .hero-overlay {
     background:

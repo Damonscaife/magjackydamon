@@ -1,12 +1,33 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import DailyCosmicPortal from "@/components/DailyCosmicPortal";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const aboutVideoRef = useRef<HTMLVideoElement>(null);
+  const aboutRestartTimeout = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (aboutRestartTimeout.current !== null) {
+        window.clearTimeout(aboutRestartTimeout.current);
+      }
+    };
+  }, []);
+
+  function restartAboutVideoAfterPause() {
+    const video = aboutVideoRef.current;
+
+    if (!video) return;
+
+    aboutRestartTimeout.current = window.setTimeout(() => {
+      video.currentTime = 0;
+      void video.play();
+    }, 2000);
+  }
 
   function submitReading(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -85,7 +106,21 @@ export default function Home() {
 
       <section className="intro section" id="about">
         <p className="section-number">01 — ABOUT</p>
-        <div>
+        <div className="about-content">
+          <div className="about-video-frame">
+            <video
+              ref={aboutVideoRef}
+              className="about-video"
+              autoPlay
+              muted
+              playsInline
+              preload="metadata"
+              onEnded={restartAboutVideoAfterPause}
+              aria-label="A message from MagJacky"
+            >
+              <source src="/about-magjacky.mp4" type="video/mp4" />
+            </video>
+          </div>
           <h2>
             You already know more
             <br />

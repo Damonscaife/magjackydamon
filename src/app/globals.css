@@ -201,6 +201,29 @@ blockquote {
 .intro > div:last-child {
   max-width: 760px;
 }
+.about-video-frame {
+  position: relative;
+  margin: 0 0 56px;
+  padding: 1px;
+  overflow: hidden;
+  background: #120c12;
+  border: 1px solid #8b6e3f66;
+  box-shadow: 0 24px 70px #2c18232e;
+}
+.about-video-frame::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid #f2eadc24;
+  pointer-events: none;
+}
+.about-video {
+  display: block;
+  width: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+  background: #0b090d;
+}
 .intro p:not(.section-number) {
   font-family: var(--font-serif);
   font-size: 22px;
@@ -595,6 +618,9 @@ footer .footer-note {
   .hero-actions {
     align-items: flex-start;
     flex-direction: column;
+  }
+  .about-video-frame {
+    margin-bottom: 38px;
   }
   .hero-overlay {
     background:

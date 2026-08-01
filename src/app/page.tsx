@@ -3,44 +3,10 @@
 import { FormEvent, useState } from "react";
 import DailyCosmicPortal from "@/components/DailyCosmicPortal";
 
-const services = [
-  {
-    symbol: "☾",
-    title: "Intuitive Tarot",
-    text: "A grounded reading for the question that keeps circling back.",
-  },
-  {
-    symbol: "✦",
-    title: "Astrology Insight",
-    text: "Understand the patterns, timing, and invitations written in your chart.",
-  },
-  {
-    symbol: "◐",
-    title: "AI + Human Readings",
-    text: "Thoughtful technology guided by human intuition, context, and care.",
-  },
-];
-
-const faqs = [
-  [
-    "What can I ask about?",
-    "Bring a relationship, career decision, creative block, transition, or any question that needs a clearer perspective.",
-  ],
-  [
-    "Do I need to know tarot or astrology?",
-    "Not at all. Every reading is explained in warm, everyday language and centered on your real life.",
-  ],
-  [
-    "Is this fortune-telling?",
-    "MagJacky is about reflection and possibility—not fixed predictions. You always remain the author of your choices.",
-  ],
-];
-
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [email, setEmail] = useState("");
 
   function submitReading(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -68,11 +34,8 @@ export default function Home() {
           <a href="#about" onClick={() => setMenuOpen(false)}>
             About
           </a>
-          <a href="#readings" onClick={() => setMenuOpen(false)}>
-            Readings
-          </a>
-          <a href="#faq" onClick={() => setMenuOpen(false)}>
-            FAQ
+          <a href="#daily-reading" onClick={() => setMenuOpen(false)}>
+            Daily reading
           </a>
           <button className="nav-cta" onClick={() => setModalOpen(true)}>
             Begin a reading
@@ -116,7 +79,9 @@ export default function Home() {
         </div>
       </section>
 
-      <DailyCosmicPortal />
+      <div id="daily-reading">
+        <DailyCosmicPortal />
+      </div>
 
       <section className="intro section" id="about">
         <p className="section-number">01 — ABOUT</p>
@@ -138,132 +103,21 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="readings section" id="readings">
-        <div className="section-heading">
-          <p className="section-number">02 — READINGS</p>
-          <h2>Choose your doorway.</h2>
-          <p>Every path begins with one honest question.</p>
-        </div>
-        <div className="service-grid">
-          {services.map((service, index) => (
-            <article className="service-card" key={service.title}>
-              <span className="card-index">0{index + 1}</span>
-              <div className="card-symbol" aria-hidden="true">
-                {service.symbol}
-              </div>
-              <h3>{service.title}</h3>
-              <p>{service.text}</p>
-              <button onClick={() => setModalOpen(true)}>
-                Explore this reading <span>↗</span>
-              </button>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="sample section">
-        <div className="sample-copy">
-          <p className="section-number">A THREE-CARD MOMENT</p>
-          <h2>
-            Past. Present.
-            <br />
-            <em>Possibility.</em>
-          </h2>
-          <p>
-            A simple spread can shift the light. Tap a card to imagine what
-            might be waiting beneath it.
-          </p>
-          <button className="primary" onClick={() => setModalOpen(true)}>
-            Draw your cards <span>→</span>
-          </button>
-        </div>
-        <div className="tarot-stack" aria-label="Three decorative tarot cards">
-          {["THE ROOT", "THE MIRROR", "THE OPENING"].map((label, index) => (
-            <button
-              key={label}
-              className={`tarot-card card-${index + 1}`}
-              onClick={() => setModalOpen(true)}
-            >
-              <span>✦</span>
-              <b>{label}</b>
-              <small>MAGJACKY</small>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section className="testimonial section">
-        <span className="quote-mark">“</span>
-        <blockquote>
-          I didn’t need someone to tell me what would happen. I needed help
-          recognizing what I already knew. That is exactly what this gave me.
-        </blockquote>
-        <p>— A MAGJACKY READER</p>
-      </section>
-
-      <section className="faq section" id="faq">
-        <div>
-          <p className="section-number">03 — QUESTIONS</p>
-          <h2>
-            A little more
-            <br />
-            light on things.
-          </h2>
-        </div>
-        <div className="faq-list">
-          {faqs.map(([question, answer]) => (
-            <details key={question}>
-              <summary>
-                {question}
-                <span>+</span>
-              </summary>
-              <p>{answer}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      <section className="newsletter section">
-        <div>
-          <p className="eyebrow">NOTES FROM THE IN-BETWEEN</p>
-          <h2>
-            A thoughtful message,
-            <br />
-            when the timing is right.
-          </h2>
-        </div>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            setEmail("");
-          }}
-        >
-          <label className="sr-only" htmlFor="email">
-            Email address
-          </label>
-          <input
-            id="email"
-            type="email"
-            required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="Your email address"
-          />
-          <button aria-label="Subscribe">→</button>
-        </form>
-      </section>
-
-      <footer>
+      <footer id="contact">
         <a className="brand" href="#top">
           MAGJACKY
         </a>
         <p>Intuition, made easier to hear.</p>
-        <div>
-          <a href="#about">About</a>
-          <a href="#readings">Readings</a>
-          <a href="#faq">FAQ</a>
+        <div className="footer-links" aria-label="Footer links coming soon">
+          <span>Contact us</span>
+          <span>Privacy</span>
+          <span>Careers</span>
+          <span>Terms</span>
+          <span>Accessibility</span>
         </div>
-        <small>© 2026 MagJacky. For reflection and entertainment.</small>
+        <small className="footer-note">
+          © 2026 MagJacky. For reflection and entertainment.
+        </small>
       </footer>
 
       {modalOpen && (

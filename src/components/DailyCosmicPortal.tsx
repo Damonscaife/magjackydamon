@@ -297,8 +297,8 @@ export default function DailyCosmicPortal() {
                     Lucky color <strong>{reading.theme.color}</strong>
                   </span>
                 </div>
-                <a href="#readings">
-                  Explore a deeper reading <span aria-hidden="true">↗</span>
+                <a href="#about">
+                  Learn more about MagJacky <span aria-hidden="true">↓</span>
                 </a>
               </div>
 

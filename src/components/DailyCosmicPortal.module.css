@@ -1,0 +1,518 @@
+.portal {
+  position: relative;
+  overflow: hidden;
+  padding: 118px max(6vw, env(safe-area-inset-left)) 126px;
+  background:
+    radial-gradient(
+      circle at 82% 12%,
+      rgba(117, 64, 103, 0.22),
+      transparent 34%
+    ),
+    linear-gradient(180deg, #0b090d 0%, #171018 48%, #0d0a0f 100%);
+  border-top: 1px solid rgba(199, 167, 106, 0.22);
+  color: #f2eadc;
+}
+
+.glow {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  left: -280px;
+  top: 38%;
+  border: 1px solid rgba(199, 167, 106, 0.15);
+  border-radius: 50%;
+  box-shadow: 0 0 120px rgba(199, 167, 106, 0.06);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: min(1240px, 100%);
+  margin: 0 auto;
+}
+
+.header {
+  max-width: 780px;
+  margin: 0 auto 56px;
+  text-align: center;
+}
+
+.eyebrow,
+.influence p,
+.guidance p,
+.action p {
+  margin: 0;
+  color: #c7a76a;
+  font-size: 0.69rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.header h2 {
+  margin: 18px 0 20px;
+  font-family: var(--font-serif), serif;
+  font-size: clamp(3.25rem, 6.4vw, 6rem);
+  font-weight: 400;
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+}
+
+.intro {
+  margin: 0;
+  color: #c7bdc3;
+  font-family: var(--font-serif), serif;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  line-height: 1.55;
+}
+
+.signGrid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 42px;
+}
+
+.signButton {
+  min-width: 0;
+  min-height: 112px;
+  padding: 15px 8px 13px;
+  border: 1px solid rgba(199, 167, 106, 0.28);
+  background: rgba(255, 255, 255, 0.025);
+  color: #f2eadc;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    transform 180ms ease;
+}
+
+.signButton:hover,
+.signButton:focus-visible {
+  border-color: #c7a76a;
+  background: rgba(199, 167, 106, 0.09);
+}
+
+.signButton:focus-visible {
+  outline: 3px solid #f2eadc;
+  outline-offset: 3px;
+}
+
+.signButton:active {
+  transform: translateY(1px);
+}
+
+.signButton.selected {
+  border-color: #d9bc82;
+  background: #c7a76a;
+  color: #171016;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+}
+
+.signSymbol,
+.signName,
+.signRange {
+  display: block;
+}
+
+.signSymbol {
+  margin-bottom: 5px;
+  color: #d7ba81;
+  font-family: var(--font-serif), serif;
+  font-size: 1.85rem;
+  line-height: 1;
+}
+
+.selected .signSymbol {
+  color: #171016;
+}
+
+.signName {
+  font-family: var(--font-serif), serif;
+  font-size: 1.13rem;
+}
+
+.signRange {
+  margin-top: 5px;
+  color: #9f929b;
+  font-size: 0.68rem;
+  line-height: 1.25;
+}
+
+.selected .signRange {
+  color: #4b3944;
+}
+
+.readingRegion {
+  min-height: 240px;
+}
+
+.emptyState {
+  min-height: 240px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 18px;
+  padding: 42px;
+  border: 1px solid rgba(199, 167, 106, 0.25);
+  background: rgba(10, 7, 11, 0.58);
+  text-align: center;
+}
+
+.emptyState span {
+  color: #c7a76a;
+  font-size: 2rem;
+}
+
+.emptyState p {
+  max-width: 600px;
+  margin: 0;
+  color: #c7bdc3;
+  font-family: var(--font-serif), serif;
+  font-size: clamp(1.18rem, 2vw, 1.45rem);
+  line-height: 1.55;
+}
+
+.readingCard {
+  padding: clamp(28px, 5vw, 66px);
+  border: 1px solid rgba(199, 167, 106, 0.42);
+  background:
+    linear-gradient(135deg, rgba(52, 29, 47, 0.95), rgba(13, 9, 14, 0.97)),
+    #171018;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.28);
+  animation: reveal 420ms ease both;
+}
+
+.readingHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid rgba(199, 167, 106, 0.23);
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.readingSymbol {
+  display: grid;
+  width: 76px;
+  height: 76px;
+  place-items: center;
+  border: 1px solid rgba(199, 167, 106, 0.5);
+  border-radius: 50%;
+  color: #d7ba81;
+  font-size: 2.55rem;
+}
+
+.identity p,
+.identity h3,
+.energy strong,
+.energy span {
+  display: block;
+  margin: 0;
+}
+
+.identity p {
+  margin-bottom: 4px;
+  color: #a99ca4;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.identity h3 {
+  font-family: var(--font-serif), serif;
+  font-size: clamp(2.7rem, 5vw, 4.6rem);
+  font-weight: 400;
+  line-height: 0.9;
+}
+
+.energy {
+  min-width: 170px;
+  text-align: right;
+}
+
+.energy strong {
+  color: #d7ba81;
+  font-family: var(--font-serif), serif;
+  font-size: clamp(3.1rem, 5vw, 4.8rem);
+  font-weight: 400;
+  line-height: 0.85;
+}
+
+.energy span {
+  margin-top: 8px;
+  color: #a99ca4;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.influence {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: 42px 0 24px;
+}
+
+.planetSymbol {
+  color: #d7ba81;
+  font-family: var(--font-serif), serif;
+  font-size: 4.8rem;
+  line-height: 1;
+}
+
+.influence h4 {
+  display: inline-block;
+  margin: 7px 14px 0 0;
+  font-family: var(--font-serif), serif;
+  font-size: clamp(2.6rem, 5vw, 4.4rem);
+  font-weight: 400;
+  line-height: 0.95;
+}
+
+.influence div > span {
+  color: #c7bdc3;
+  font-family: var(--font-serif), serif;
+  font-size: 1.1rem;
+}
+
+.message {
+  max-width: 920px;
+  margin: 0 0 38px;
+  color: #e9dfd5;
+  font-family: var(--font-serif), serif;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  line-height: 1.55;
+}
+
+.ratings {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 34px;
+}
+
+.rating {
+  padding: 17px 19px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.rating > span:first-child {
+  display: block;
+  margin-bottom: 7px;
+  color: #b8acb3;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.stars {
+  color: #d7ba81;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.guidanceGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.guidance,
+.action {
+  min-height: 155px;
+  padding: 25px;
+  border: 1px solid rgba(199, 167, 106, 0.2);
+}
+
+.guidance blockquote,
+.action strong {
+  display: block;
+  margin: 14px 0 0;
+  color: #f2eadc;
+  font-family: var(--font-serif), serif;
+  font-size: clamp(1.22rem, 2vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.action {
+  background: rgba(199, 167, 106, 0.1);
+}
+
+.readingFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  margin-top: 32px;
+  padding-top: 25px;
+  border-top: 1px solid rgba(199, 167, 106, 0.23);
+}
+
+.luckyDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  color: #a99ca4;
+  font-size: 0.77rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.luckyDetails strong {
+  color: #f2eadc;
+  font-weight: 500;
+}
+
+.readingFooter a {
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(199, 167, 106, 0.65);
+  color: #d7ba81;
+  font-size: 0.73rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.readingFooter a:focus-visible {
+  outline: 3px solid #f2eadc;
+  outline-offset: 4px;
+}
+
+.returnCue {
+  margin: 28px 0 0;
+  color: #8f838b;
+  font-family: var(--font-serif), serif;
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .portal {
+    padding-top: 92px;
+    padding-bottom: 98px;
+  }
+
+  .signGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .readingHeader,
+  .readingFooter {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .portal {
+    padding: 78px max(18px, env(safe-area-inset-left))
+      calc(84px + env(safe-area-inset-bottom));
+  }
+
+  .header {
+    margin-bottom: 38px;
+  }
+
+  .signGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .signButton {
+    min-height: 94px;
+    padding: 12px 4px 10px;
+  }
+
+  .signName {
+    font-size: 1rem;
+  }
+
+  .signRange {
+    font-size: 0.63rem;
+  }
+
+  .emptyState {
+    min-height: 210px;
+    padding: 28px 20px;
+  }
+
+  .readingHeader,
+  .readingFooter {
+    flex-direction: column;
+  }
+
+  .readingHeader {
+    gap: 26px;
+  }
+
+  .readingSymbol {
+    width: 62px;
+    height: 62px;
+    font-size: 2rem;
+  }
+
+  .energy {
+    min-width: 0;
+    text-align: left;
+  }
+
+  .influence {
+    align-items: flex-start;
+    gap: 16px;
+    margin-top: 32px;
+  }
+
+  .planetSymbol {
+    font-size: 3.6rem;
+  }
+
+  .influence h4 {
+    display: block;
+  }
+
+  .ratings,
+  .guidanceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .guidanceGrid .action {
+    grid-row: 1;
+  }
+
+  .readingFooter {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 390px) {
+  .signGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signButton,
+  .readingCard {
+    animation: none;
+    transition: none;
+  }
+}

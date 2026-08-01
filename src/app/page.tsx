@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import DailyCosmicPortal from "@/components/DailyCosmicPortal";
 
 const services = [
   {
@@ -114,6 +115,8 @@ export default function Home() {
           </a>
         </div>
       </section>
+
+      <DailyCosmicPortal />
 
       <section className="intro section" id="about">
         <p className="section-number">01 — ABOUT</p>

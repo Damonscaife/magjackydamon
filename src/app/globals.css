@@ -667,6 +667,16 @@ footer .footer-note {
   .hero-video {
     object-position: 60% center;
   }
+  .about-video-frame {
+    min-height: 0;
+  }
+  .about-video {
+    position: relative;
+    inset: auto;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+  }
   .about-copy,
   .sample,
   .faq {
@@ -713,12 +723,6 @@ footer .footer-note {
   .hero-actions {
     align-items: flex-start;
     flex-direction: column;
-  }
-  .about-video-frame {
-    min-height: 62svh;
-  }
-  .about-video {
-    object-position: center;
   }
   .careers-heading {
     margin-bottom: 48px;

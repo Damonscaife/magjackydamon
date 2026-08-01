@@ -91,8 +91,9 @@ a {
   font-size: 24px;
 }
 .hero {
-  min-height: 860px;
+  min-height: max(760px, 100svh);
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -119,7 +120,10 @@ a {
     linear-gradient(0deg, #0b090d 0%, transparent 30%, #0b090d42 100%);
   pointer-events: none;
 }
-.hero > * {
+.hero > .eyebrow,
+.hero > h1,
+.hero > .hero-copy,
+.hero > .hero-actions {
   position: relative;
   z-index: 2;
 }

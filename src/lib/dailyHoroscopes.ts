@@ -300,9 +300,7 @@ export function createDailyHoroscopes(dateKey: string): DailyHoroscope[] {
   const positions = getPositions(dateKey);
   const aspects = getAspects(positions);
   const moon = positions[0];
-  const sun = positions[1];
   const mercury = positions[2];
-  const venus = positions[3];
   const mars = positions[4];
   const jupiter = positions[5];
   const leadingAspect = aspects[0];
@@ -316,16 +314,15 @@ export function createDailyHoroscopes(dateKey: string): DailyHoroscope[] {
 
   return risingSigns.map((sign, risingIndex) => {
     const moonHouse = houseFor(moon, risingIndex);
-    const venusHouse = houseFor(venus, risingIndex);
     const mercuryHouse = houseFor(mercury, risingIndex);
     const marsHouse = houseFor(mars, risingIndex);
     const jupiterHouse = houseFor(jupiter, risingIndex);
 
-    const love = `${planetPhrase(moon, risingIndex)}. Your emotional weather is the clearest guide, while Venus in your ${venusHouse}${ordinalSuffix(venusHouse)} House adds context around desire and reciprocity. ${loveByHouse[moonHouse - 1]} ${aspectPhrase(aspects.find((aspect) => aspect.first === "Venus" || aspect.second === "Venus"))}`;
+    const love = `${planetPhrase(moon, risingIndex)}. ${loveByHouse[moonHouse - 1]}`;
 
-    const work = `${planetPhrase(mercury, risingIndex)}, while Mars energizes your ${marsHouse}${ordinalSuffix(marsHouse)} House. ${workByHouse[mercuryHouse - 1]} Pace effort deliberately: useful momentum comes from acting on verified information, not urgency. ${aspectPhrase(aspects.find((aspect) => [aspect.first, aspect.second].includes("Mars") || [aspect.first, aspect.second].includes("Mercury")))}`;
+    const work = `${planetPhrase(mercury, risingIndex)}, while Mars energizes your ${marsHouse}${ordinalSuffix(marsHouse)} House. ${workByHouse[mercuryHouse - 1]}`;
 
-    const luck = `${planetPhrase(jupiter, risingIndex)}. ${luckByHouse[jupiterHouse - 1]} The Sun in your ${houseFor(sun, risingIndex)}${ordinalSuffix(houseFor(sun, risingIndex))} House shows where confidence can amplify the opening, but optimism works best with discernment. ${aspectPhrase(leadingAspect)}${ingressPhrase(positions)}`;
+    const luck = `${planetPhrase(jupiter, risingIndex)}. ${luckByHouse[jupiterHouse - 1]} ${aspectPhrase(leadingAspect)}${ingressPhrase(positions)}`;
 
     return {
       sign,

@@ -1,4 +1,10 @@
-import { Body, EclipticLongitude } from "astronomy-engine";
+import {
+  Body,
+  Ecliptic,
+  EclipticGeoMoon,
+  GeoVector,
+  SunPosition,
+} from "astronomy-engine";
 
 export const risingSigns = [
   { name: "Aries", symbol: "♈" },
@@ -118,6 +124,12 @@ function signedDifference(to: number, from: number) {
   return difference > 180 ? difference - 360 : difference;
 }
 
+function geocentricLongitude(body: Body, date: Date) {
+  if (body === Body.Moon) return normalize(EclipticGeoMoon(date).lon);
+  if (body === Body.Sun) return normalize(SunPosition(date).elon);
+  return normalize(Ecliptic(GeoVector(body, date, true)).elon);
+}
+
 function lasVegasMidnight(dateKey: string) {
   const [year, month, day] = dateKey.split("-").map(Number);
   const desired = Date.UTC(year, month - 1, day, 0, 0, 0);
@@ -156,9 +168,9 @@ function getPositions(dateKey: string) {
   const after = new Date(date.getTime() + 24 * 60 * 60 * 1000);
 
   return planets.map(({ name, body }): PlanetPosition => {
-    const longitude = normalize(EclipticLongitude(body, date));
-    const previousLongitude = normalize(EclipticLongitude(body, before));
-    const nextLongitude = normalize(EclipticLongitude(body, after));
+    const longitude = geocentricLongitude(body, date);
+    const previousLongitude = geocentricLongitude(body, before);
+    const nextLongitude = geocentricLongitude(body, after);
     const signIndex = Math.floor(longitude / 30);
     const previousSign = Math.floor(previousLongitude / 30);
     const nextSign = Math.floor(nextLongitude / 30);

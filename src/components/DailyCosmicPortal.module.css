@@ -37,10 +37,7 @@
   text-align: center;
 }
 
-.eyebrow,
-.influence p,
-.guidance p,
-.action p {
+.eyebrow {
   margin: 0;
   color: #c7a76a;
   font-size: 0.69rem;
@@ -232,166 +229,55 @@
   line-height: 0.9;
 }
 
-.energy {
-  min-width: 170px;
+.transitSummary {
+  max-width: 310px;
+  margin: 0;
+  color: #d7ba81;
+  line-height: 1.6;
   text-align: right;
-}
-
-.energy strong {
-  color: #d7ba81;
-  font-family: var(--font-serif), serif;
-  font-size: clamp(3.1rem, 5vw, 4.8rem);
-  font-weight: 400;
-  line-height: 0.85;
-}
-
-.energy span {
-  margin-top: 8px;
-  color: #a99ca4;
   font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.influence {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  margin: 42px 0 24px;
-}
-
-.planetSymbol {
-  color: #d7ba81;
-  font-family: var(--font-serif), serif;
-  font-size: 4.8rem;
-  line-height: 1;
-}
-
-.influence h4 {
-  display: inline-block;
-  margin: 7px 14px 0 0;
-  font-family: var(--font-serif), serif;
-  font-size: clamp(2.6rem, 5vw, 4.4rem);
-  font-weight: 400;
-  line-height: 0.95;
-}
-
-.influence div > span {
-  color: #c7bdc3;
-  font-family: var(--font-serif), serif;
-  font-size: 1.1rem;
-}
-
-.message {
-  max-width: 920px;
-  margin: 0 0 38px;
-  color: #e9dfd5;
-  font-family: var(--font-serif), serif;
-  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
-  line-height: 1.55;
-}
-
-.ratings {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 34px;
-}
-
-.rating {
-  padding: 17px 19px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.025);
-}
-
-.rating > span:first-child {
-  display: block;
-  margin-bottom: 7px;
-  color: #b8acb3;
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.stars {
-  color: #d7ba81;
-  letter-spacing: 0.12em;
-  white-space: nowrap;
-}
-
-.guidanceGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.guidance,
-.action {
-  min-height: 155px;
-  padding: 25px;
-  border: 1px solid rgba(199, 167, 106, 0.2);
-}
-
-.guidance blockquote,
-.action strong {
-  display: block;
-  margin: 14px 0 0;
-  color: #f2eadc;
-  font-family: var(--font-serif), serif;
-  font-size: clamp(1.22rem, 2vw, 1.5rem);
-  font-weight: 400;
-  line-height: 1.45;
-}
-
-.action {
-  background: rgba(199, 167, 106, 0.1);
-}
-
-.readingFooter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 30px;
-  margin-top: 32px;
-  padding-top: 25px;
-  border-top: 1px solid rgba(199, 167, 106, 0.23);
-}
-
-.luckyDetails {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 28px;
-  color: #a99ca4;
-  font-size: 0.77rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.luckyDetails strong {
-  color: #f2eadc;
-  font-weight: 500;
+.horoscopeSections {
+  display: grid;
+  gap: 0;
 }
 
-.readingFooter a {
-  padding-bottom: 5px;
-  border-bottom: 1px solid rgba(199, 167, 106, 0.65);
+.horoscopeSections section {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.25fr) 1fr;
+  gap: clamp(24px, 5vw, 70px);
+  padding: 34px 0;
+  border-bottom: 1px solid rgba(199, 167, 106, 0.2);
+}
+
+.horoscopeSections h4 {
+  margin: 0;
   color: #d7ba81;
-  font-size: 0.73rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
 }
 
-.readingFooter a:focus-visible {
-  outline: 3px solid #f2eadc;
-  outline-offset: 4px;
+.horoscopeSections p {
+  max-width: 860px;
+  margin: 0;
+  color: #e9dfd5;
+  font-family: var(--font-serif), serif;
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  line-height: 1.65;
 }
 
 .returnCue {
   margin: 28px 0 0;
-  color: #8f838b;
-  font-family: var(--font-serif), serif;
-  font-size: 1.05rem;
+  color: #a99ca4;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
   text-align: center;
+  text-transform: uppercase;
 }
 
 @keyframes reveal {
@@ -415,8 +301,7 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
-  .readingHeader,
-  .readingFooter {
+  .readingHeader {
     align-items: flex-start;
   }
 }
@@ -455,8 +340,7 @@
     padding: 28px 20px;
   }
 
-  .readingHeader,
-  .readingFooter {
+  .readingHeader {
     flex-direction: column;
   }
 
@@ -470,36 +354,15 @@
     font-size: 2rem;
   }
 
-  .energy {
-    min-width: 0;
+  .transitSummary {
+    max-width: none;
     text-align: left;
   }
 
-  .influence {
-    align-items: flex-start;
-    gap: 16px;
-    margin-top: 32px;
-  }
-
-  .planetSymbol {
-    font-size: 3.6rem;
-  }
-
-  .influence h4 {
-    display: block;
-  }
-
-  .ratings,
-  .guidanceGrid {
+  .horoscopeSections section {
     grid-template-columns: 1fr;
-  }
-
-  .guidanceGrid .action {
-    grid-row: 1;
-  }
-
-  .readingFooter {
-    gap: 24px;
+    gap: 14px;
+    padding: 28px 0;
   }
 }
 

@@ -11,7 +11,6 @@ const ABOUT_VIDEO_START_TIME = 0.25;
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [aboutVideoReady, setAboutVideoReady] = useState(false);
   const aboutVideoRef = useRef<HTMLVideoElement>(null);
   const aboutRestartTimeout = useRef<number | null>(null);
@@ -37,7 +36,14 @@ export default function Home() {
 
   function submitReading(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
+
+    const formData = new FormData(event.currentTarget);
+    const name = String(formData.get("name") ?? "").trim();
+    const question = String(formData.get("question") ?? "").trim();
+    const subject = `Reading request from ${name}`;
+    const body = `Name: ${name}\n\nQuestion:\n${question}`;
+
+    window.location.href = `mailto:hello@magjacky.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
 
   return (
@@ -197,7 +203,7 @@ export default function Home() {
         </a>
         <p>Intuition, made easier to hear.</p>
         <div className="footer-links" aria-label="Footer links coming soon">
-          <span>Contact us</span>
+          <a href="mailto:hello@magjacky.com">Contact us</a>
           <span>Privacy</span>
           <a href="#careers">Careers</a>
           <span>Terms</span>
@@ -228,48 +234,34 @@ export default function Home() {
             >
               ×
             </button>
-            {submitted ? (
-              <div className="success">
-                <span>✦</span>
-                <h2>Your question is received.</h2>
-                <p>
-                  This is the beginning of a more thoughtful reading experience.
-                  We’ll be ready to continue soon.
-                </p>
-                <button
-                  className="primary"
-                  onClick={() => {
-                    setModalOpen(false);
-                    setSubmitted(false);
-                  }}
-                >
-                  Close
+            <>
+              <p className="eyebrow">BEGIN A READING</p>
+              <h2 id="reading-title">What’s asking for your attention?</h2>
+              <p>
+                Share the question you’re sitting with. Keep it as simple or
+                detailed as you like.
+              </p>
+              <form onSubmit={submitReading}>
+                <label htmlFor="name">Your name</label>
+                <input
+                  id="name"
+                  name="name"
+                  required
+                  placeholder="First name"
+                />
+                <label htmlFor="question">Your question</label>
+                <textarea
+                  id="question"
+                  name="question"
+                  required
+                  rows={4}
+                  placeholder="I’m looking for clarity about…"
+                />
+                <button className="primary" type="submit">
+                  Email MagJacky <span>→</span>
                 </button>
-              </div>
-            ) : (
-              <>
-                <p className="eyebrow">BEGIN A READING</p>
-                <h2 id="reading-title">What’s asking for your attention?</h2>
-                <p>
-                  Share the question you’re sitting with. Keep it as simple or
-                  detailed as you like.
-                </p>
-                <form onSubmit={submitReading}>
-                  <label htmlFor="name">Your name</label>
-                  <input id="name" required placeholder="First name" />
-                  <label htmlFor="question">Your question</label>
-                  <textarea
-                    id="question"
-                    required
-                    rows={4}
-                    placeholder="I’m looking for clarity about…"
-                  />
-                  <button className="primary" type="submit">
-                    Continue <span>→</span>
-                  </button>
-                </form>
-              </>
-            )}
+              </form>
+            </>
           </div>
         </div>
       )}

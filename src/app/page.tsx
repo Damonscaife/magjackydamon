@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import DailyCosmicPortal from "@/components/DailyCosmicPortal";
+import TarotExperience from "@/components/TarotExperience";
 
 // The source file opens with a brief storyboard/contact-sheet flash.
 // Start on the first clean shot so those production frames are never shown.
@@ -106,14 +107,16 @@ export default function Home() {
           what your intuition has been saying all along.
         </p>
         <div className="hero-actions">
-          <button className="primary" onClick={() => setModalOpen(true)}>
+          <a className="primary" href="#card-reading">
             Begin your reading <span>→</span>
-          </button>
+          </a>
           <a className="text-link" href="#about">
             Discover MagJacky ↓
           </a>
         </div>
       </section>
+
+      <TarotExperience onContinue={() => setModalOpen(true)} />
 
       <div id="daily-reading">
         <DailyCosmicPortal />

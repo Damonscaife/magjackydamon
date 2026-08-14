@@ -30,20 +30,7 @@ const majors = [
   ["The World Within", "XXI", "⊕", "Receive the completion.", "Something has come full circle. Celebrate what you integrated before reaching for the next horizon.", "What achievement deserves to be truly felt?"],
 ].map(([name, number, symbol, invitation, message, prompt]) => ({ name, number, symbol, invitation, message, prompt }));
 
-const suits = [
-  ["Sparks", "✦", "creative fire", "courage", "scattered urgency"],
-  ["Tides", "≈", "emotional truth", "connection", "overwhelm"],
-  ["Winds", "⟡", "clear thought", "discernment", "overthinking"],
-  ["Roots", "❈", "the tangible world", "steadiness", "holding too tightly"],
-];
-const ranks = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Seeker", "Rider", "Guardian", "Keeper"];
-const invitations = ["Welcome the first spark.", "Let two truths meet.", "Create with others.", "Protect what sustains you.", "Find the lesson inside friction.", "Allow giving and receiving.", "Stand beside what matters.", "Let practice become momentum.", "Trust the strength you have built.", "Release what was never yours to carry.", "Stay curious and begin.", "Move with wholehearted intention.", "Lead with perceptive care.", "Embody the wisdom you have earned."];
-const minors: Card[] = suits.flatMap(([suit, symbol, theme, gift, shadow]) => ranks.map((rank, i) => ({
-  name: `${rank} of ${suit}`, number: String(i + 1).padStart(2, "0"), symbol, invitation: invitations[i],
-  message: `Today, ${theme} asks for your attention. Its gift is ${gift}; its shadow is ${shadow}. Let both inform your next honest step.`,
-  prompt: `Where could ${gift} change the way you meet this moment?`,
-})));
-const cards: Card[] = [...majors, ...minors];
+const cards: Card[] = majors;
 const seed = (value: string) => [...value].reduce((sum, char, i) => sum + char.charCodeAt(0) * (i + 11), 0);
 
 export default function TarotExperience({ onContinue }: { onContinue: () => void }) {
@@ -53,15 +40,17 @@ export default function TarotExperience({ onContinue }: { onContinue: () => void
   const [started, setStarted] = useState(false);
   const [slot, setSlot] = useState<number | null>(null);
   const revealRef = useRef<HTMLDivElement>(null);
+  const deckRef = useRef<HTMLDivElement>(null);
   const currentYear = useMemo(() => new Date().getFullYear(), []);
   const daysInMonth = month && year ? new Date(Number(year), Number(month), 0).getDate() : 31;
   const birthday = month && day && year ? `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}` : "";
   const card = slot === null ? null : cards[(seed(birthday) + slot * 17) % cards.length];
   const unlock = () => { if (!birthday) return; setStarted(true); setTimeout(() => document.getElementById("tarot-deck")?.scrollIntoView({ behavior: "smooth", block: "center" }), 80); };
   const choose = (index: number) => { if (slot !== null) return; setSlot(index); setTimeout(() => revealRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 800); };
+  const moveDeck = (direction: -1 | 1) => deckRef.current?.scrollBy({ left: direction * Math.min(window.innerWidth * .72, 640), behavior: "smooth" });
 
   return <section className={styles.experience} id="card-reading" aria-labelledby="card-reading-title">
-    <div className={styles.stars} aria-hidden="true" />
+    <div className={styles.stars} aria-hidden="true"><i/><i/><i/><span/><span/></div>
     <header className={styles.header}><p className={styles.eyebrow}>A MAGJACKY CARD RITUAL</p><h2 id="card-reading-title">Meet the message<br/><em>meant for this moment.</em></h2><p>One birthday. One intuitive choice. One original card to carry with you.</p></header>
     {!started ? <div className={styles.birthGate}>
       <div className={styles.step}><span>01</span><p>Begin with your birthday</p></div>
@@ -73,9 +62,11 @@ export default function TarotExperience({ onContinue }: { onContinue: () => void
       <p className={styles.privacy}>Used only to personalize this moment. It is not saved.</p><button type="button" disabled={!birthday} onClick={unlock}>Open the deck <span>→</span></button>
     </div> : <div className={styles.deckJourney} id="tarot-deck">
       <div className={styles.deckIntro}><p><span>02</span> Choose without overthinking</p><h3>{card ? "Your card has found you." : "Move through the deck. Tap the card that pulls you in."}</h3></div>
-      <div className={`${styles.deckStage} ${card ? styles.dimmed : ""}`} aria-label="Choose one tarot card"><div className={styles.deckRail}>
-        {Array.from({length:18},(_,i)=><button type="button" className={styles.cardBack} style={{"--i":i} as CSSProperties} key={i} onClick={()=>choose(i)} aria-label={`Choose card ${i+1}`} disabled={slot!==null}><span>☾<i>✦</i></span></button>)}
-      </div>{!card && <p className={styles.swipeCue}>← Swipe or scroll the deck →</p>}</div>
+      <div className={`${styles.deckStage} ${card ? styles.dimmed : ""}`} aria-label="Choose one Major Arcana card">
+        <div className={styles.deckRail} ref={deckRef} onWheel={event=>{if(Math.abs(event.deltaY)>Math.abs(event.deltaX)){event.preventDefault();event.currentTarget.scrollLeft+=event.deltaY;}}}>
+          {Array.from({length:22},(_,i)=><button type="button" className={styles.cardBack} style={{"--i":i} as CSSProperties} key={i} onClick={()=>choose(i)} aria-label={`Choose Major Arcana card ${i+1} of 22`} disabled={slot!==null}><span>☾<i>✦</i></span></button>)}
+        </div>{!card && <div className={styles.deckControls}><button type="button" onClick={()=>moveDeck(-1)} aria-label="Move deck left">←</button><p>Swipe, drag, scroll, or use the arrows</p><button type="button" onClick={()=>moveDeck(1)} aria-label="Move deck right">→</button></div>}
+      </div>
       {card && <div className={styles.reveal} ref={revealRef} aria-live="polite">
         <div className={styles.focusCard}><div className={styles.cardFace}><span className={styles.cardNumber}>{card.number}</span><div className={styles.constellation} aria-hidden="true"><i/><i/><i/><i/></div><span className={styles.cardSymbol}>{card.symbol}</span><div className={styles.horizon}/><p>{card.name}</p></div></div>
         <article className={styles.readingCopy}><p className={styles.eyebrow}>YOUR CARD</p><h3>{card.name}</h3><h4>{card.invitation}</h4><p>{card.message}</p><blockquote>“{card.prompt}”</blockquote><div className={styles.deeper}><p>Your single card opens the door. A personal reading explores what lies beyond it.</p><button type="button" onClick={onContinue}>Go deeper with MagJacky <span>→</span></button></div><small>For reflection and entertainment. You remain the author of every choice.</small></article>

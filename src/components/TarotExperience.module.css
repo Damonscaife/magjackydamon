@@ -19,3 +19,7 @@
 @keyframes buttonGlow{0%,100%{box-shadow:0 0 10px #d7ba8177,0 0 26px #c7a76a33}50%{box-shadow:0 0 18px #f3dca5cc,0 0 46px #c7a76a77}}
 @media(max-width:760px){.deckRail{padding-inline:42px}.deckControls{gap:12px}.deckControls p{max-width:190px}.deckControls button{width:42px;height:42px}}
 @media(prefers-reduced-motion:reduce){.stars i,.stars span,.birthGate button:not(:disabled),.readingCopy button{animation:none}}
+
+/* Pexels motion artwork inside the revealed card. */
+.cardFace>video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}.videoVeil{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,#0b071250 0%,transparent 32%,#0b0712d9 88%),radial-gradient(circle at 50% 48%,transparent 20%,#140a1966 85%)}.cardSymbol{background:#21121f38;backdrop-filter:blur(3px)}.pexelsCredit{display:block;margin-top:12px;color:#9f929b;font-size:9px;letter-spacing:.1em;text-align:center;text-transform:uppercase;transition:color .2s}.pexelsCredit:hover,.pexelsCredit:focus-visible{color:#d7ba81}.constellation,.horizon{z-index:1}
+@media(prefers-reduced-motion:reduce){.cardFace>video{display:none}}

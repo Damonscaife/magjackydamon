@@ -4,6 +4,7 @@ import { useMemo, useRef, useState, type CSSProperties } from "react";
 import styles from "./TarotExperience.module.css";
 
 type Card = { name: string; number: string; symbol: string; invitation: string; message: string; prompt: string };
+type PexelsClip = { src: string; page: string; creator: string; label: string };
 
 const majors = [
   ["The Wanderer", "0", "✦", "Begin before you feel ready.", "A new path is asking for your trust. Curiosity—not certainty—is your compass today.", "What would you try if you did not need to know the ending?"],
@@ -31,6 +32,16 @@ const majors = [
 ].map(([name, number, symbol, invitation, message, prompt]) => ({ name, number, symbol, invitation, message, prompt }));
 
 const cards: Card[] = majors;
+const clips: PexelsClip[] = [
+  { src: "https://videos.pexels.com/video-files/13556314/13556314-hd_720_1280_30fps.mp4", page: "https://www.pexels.com/video/sunlight-over-trees-and-clouds-13556314/", creator: "Atlantic Ambience", label: "Sunrise over a misty forest" },
+  { src: "https://videos.pexels.com/video-files/6956171/6956171-hd_1080_1920_25fps.mp4", page: "https://www.pexels.com/video/man-lighting-candle-6956171/", creator: "Thirdman", label: "A quiet candle ritual" },
+  { src: "https://videos.pexels.com/video-files/8207844/8207844-hd_1080_2048_25fps.mp4", page: "https://www.pexels.com/video/a-serious-woman-looking-at-camera-8207844/", creator: "cottonbro studio", label: "A mystical figure beneath the moon" },
+  { src: "https://videos.pexels.com/video-files/7303014/7303014-hd_1920_1080_30fps.mp4", page: "https://www.pexels.com/video/petals-falling-beside-incense-and-a-burning-candle-7303014/", creator: "Cup of Couple", label: "Falling petals and candlelight" },
+  { src: "https://videos.pexels.com/video-files/7077052/7077052-hd_1080_1920_30fps.mp4", page: "https://www.pexels.com/video/singing-bowl-on-the-grass-7077052/", creator: "Nataliya Vaitkevich", label: "A singing bowl in a garden" },
+  { src: "https://videos.pexels.com/video-files/6924608/6924608-hd_1080_1920_24fps.mp4", page: "https://www.pexels.com/video/moon-over-the-sea-6924608/", creator: "PK Gupta", label: "Moonlight moving over the sea" },
+  { src: "https://videos.pexels.com/video-files/5898221/5898221-hd_1280_720_60fps.mp4", page: "https://www.pexels.com/video/slow-motion-video-of-a-lightning-storm-5898221/", creator: "Md Arif", label: "Lightning crossing a night sky" },
+];
+const clipByCard = [0, 1, 2, 3, 4, 4, 5, 0, 2, 1, 5, 4, 5, 6, 3, 2, 6, 5, 5, 0, 1, 0];
 const seed = (value: string) => [...value].reduce((sum, char, i) => sum + char.charCodeAt(0) * (i + 11), 0);
 
 export default function TarotExperience({ onContinue }: { onContinue: () => void }) {
@@ -44,7 +55,9 @@ export default function TarotExperience({ onContinue }: { onContinue: () => void
   const currentYear = useMemo(() => new Date().getFullYear(), []);
   const daysInMonth = month && year ? new Date(Number(year), Number(month), 0).getDate() : 31;
   const birthday = month && day && year ? `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}` : "";
-  const card = slot === null ? null : cards[(seed(birthday) + slot * 17) % cards.length];
+  const cardIndex = slot === null ? null : (seed(birthday) + slot * 17) % cards.length;
+  const card = cardIndex === null ? null : cards[cardIndex];
+  const clip = cardIndex === null ? null : clips[clipByCard[cardIndex]];
   const unlock = () => { if (!birthday) return; setStarted(true); setTimeout(() => document.getElementById("tarot-deck")?.scrollIntoView({ behavior: "smooth", block: "center" }), 80); };
   const choose = (index: number) => { if (slot !== null) return; setSlot(index); setTimeout(() => revealRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 800); };
   const moveDeck = (direction: -1 | 1) => deckRef.current?.scrollBy({ left: direction * Math.min(window.innerWidth * .72, 640), behavior: "smooth" });
@@ -68,7 +81,7 @@ export default function TarotExperience({ onContinue }: { onContinue: () => void
         </div>{!card && <div className={styles.deckControls}><button type="button" onClick={()=>moveDeck(-1)} aria-label="Move deck left">←</button><p>Swipe, drag, scroll, or use the arrows</p><button type="button" onClick={()=>moveDeck(1)} aria-label="Move deck right">→</button></div>}
       </div>
       {card && <div className={styles.reveal} ref={revealRef} aria-live="polite">
-        <div className={styles.focusCard}><div className={styles.cardFace}><span className={styles.cardNumber}>{card.number}</span><div className={styles.constellation} aria-hidden="true"><i/><i/><i/><i/></div><span className={styles.cardSymbol}>{card.symbol}</span><div className={styles.horizon}/><p>{card.name}</p></div></div>
+        <div className={styles.focusCard}><div className={styles.cardFace}>{clip && <video key={clip.src} autoPlay loop muted playsInline preload="metadata" aria-label={clip.label}><source src={clip.src} type="video/mp4"/></video>}<div className={styles.videoVeil}/><span className={styles.cardNumber}>{card.number}</span><div className={styles.constellation} aria-hidden="true"><i/><i/><i/><i/></div><span className={styles.cardSymbol}>{card.symbol}</span><div className={styles.horizon}/><p>{card.name}</p></div>{clip && <a className={styles.pexelsCredit} href={clip.page} target="_blank" rel="noreferrer">Video by {clip.creator} on Pexels</a>}</div>
         <article className={styles.readingCopy}><p className={styles.eyebrow}>YOUR CARD</p><h3>{card.name}</h3><h4>{card.invitation}</h4><p>{card.message}</p><blockquote>“{card.prompt}”</blockquote><div className={styles.deeper}><p>Your single card opens the door. A personal reading explores what lies beyond it.</p><button type="button" onClick={onContinue}>Go deeper with MagJacky <span>→</span></button></div><small>For reflection and entertainment. You remain the author of every choice.</small></article>
       </div>}
     </div>}

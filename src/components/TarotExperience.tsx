@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState, type CSSProperties } from "react";
+import Image from "next/image";
 import styles from "./TarotExperience.module.css";
 
 type Card = { name: string; number: string; symbol: string; invitation: string; message: string; prompt: string };
@@ -32,6 +33,13 @@ const majors = [
 ].map(([name, number, symbol, invitation, message, prompt]) => ({ name, number, symbol, invitation, message, prompt }));
 
 const cards: Card[] = majors;
+const frontCardAssets = [
+  "/cards/the-fool.png", "/cards/the-magician.png", "/cards/the-high-priestess.png", "/cards/the-empress.png",
+  "/cards/the-emperor.png", "/cards/the-hierophant.png", "/cards/the-lovers.png", "/cards/the-chariot.png",
+  "/cards/strength.png", "/cards/the-hermit.png", null, "/cards/justice.png", "/cards/the-hanged-man.png",
+  "/cards/death.png", "/cards/temperance.png", "/cards/the-devil.png", "/cards/the-tower.png", null,
+  "/cards/the-moon.png", "/cards/the-sun.png", "/cards/judgement.png", "/cards/the-world.png",
+];
 const clips: PexelsClip[] = [
   { src: "https://videos.pexels.com/video-files/13556314/13556314-hd_720_1280_30fps.mp4", page: "https://www.pexels.com/video/sunlight-over-trees-and-clouds-13556314/", creator: "Atlantic Ambience", label: "Sunrise over a misty forest" },
   { src: "https://videos.pexels.com/video-files/6956171/6956171-hd_1080_1920_25fps.mp4", page: "https://www.pexels.com/video/man-lighting-candle-6956171/", creator: "Thirdman", label: "A quiet candle ritual" },
@@ -57,6 +65,7 @@ export default function TarotExperience({ onContinue }: { onContinue: () => void
   const birthday = month && day && year ? `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}` : "";
   const cardIndex = slot === null ? null : (seed(birthday) + slot * 17) % cards.length;
   const card = cardIndex === null ? null : cards[cardIndex];
+  const frontCardAsset = cardIndex === null ? null : frontCardAssets[cardIndex];
   const clip = cardIndex === null ? null : clips[clipByCard[cardIndex]];
   const unlock = () => { if (!birthday) return; setStarted(true); setTimeout(() => document.getElementById("tarot-deck")?.scrollIntoView({ behavior: "smooth", block: "center" }), 80); };
   const choose = (index: number) => { if (slot !== null) return; setSlot(index); setTimeout(() => revealRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 800); };
@@ -77,11 +86,11 @@ export default function TarotExperience({ onContinue }: { onContinue: () => void
       <div className={styles.deckIntro}><p><span>02</span> Choose without overthinking</p><h3>{card ? "Your card has found you." : "Move through the deck. Tap the card that pulls you in."}</h3></div>
       <div className={`${styles.deckStage} ${card ? styles.dimmed : ""}`} aria-label="Choose one Major Arcana card">
         <div className={styles.deckRail} ref={deckRef} onWheel={event=>{if(Math.abs(event.deltaY)>Math.abs(event.deltaX)){event.preventDefault();event.currentTarget.scrollLeft+=event.deltaY;}}}>
-          {Array.from({length:22},(_,i)=><button type="button" className={styles.cardBack} style={{"--i":i} as CSSProperties} key={i} onClick={()=>choose(i)} aria-label={`Choose Major Arcana card ${i+1} of 22`} disabled={slot!==null}><span>☾<i>✦</i></span></button>)}
+          {Array.from({length:22},(_,i)=><button type="button" className={styles.cardBack} style={{"--i":i} as CSSProperties} key={i} onClick={()=>choose(i)} aria-label={`Choose Major Arcana card ${i+1} of 22`} disabled={slot!==null}><Image src="/cards/back.png" alt="" fill sizes="(max-width: 760px) 112px, 145px" priority={i < 6}/></button>)}
         </div>{!card && <div className={styles.deckControls}><button type="button" onClick={()=>moveDeck(-1)} aria-label="Move deck left">←</button><p>Swipe, drag, scroll, or use the arrows</p><button type="button" onClick={()=>moveDeck(1)} aria-label="Move deck right">→</button></div>}
       </div>
       {card && <div className={styles.reveal} ref={revealRef} aria-live="polite">
-        <div className={styles.focusCard}><div className={styles.cardFace}>{clip && <video key={clip.src} autoPlay loop muted playsInline preload="metadata" aria-label={clip.label}><source src={clip.src} type="video/mp4"/></video>}<div className={styles.videoVeil}/><span className={styles.cardNumber}>{card.number}</span><div className={styles.constellation} aria-hidden="true"><i/><i/><i/><i/></div><span className={styles.cardSymbol}>{card.symbol}</span><div className={styles.horizon}/><p>{card.name}</p></div>{clip && <a className={styles.pexelsCredit} href={clip.page} target="_blank" rel="noreferrer">Video by {clip.creator} on Pexels</a>}</div>
+        <div className={styles.focusCard}><div className={styles.cardFace}>{frontCardAsset ? <Image className={styles.cardArtwork} src={frontCardAsset} alt={`${card.name} tarot card`} fill sizes="(max-width: 760px) 78vw, 360px" priority/> : <><video key={clip?.src} autoPlay loop muted playsInline preload="metadata" aria-label={clip?.label}><source src={clip?.src} type="video/mp4"/></video><div className={styles.videoVeil}/><span className={styles.cardNumber}>{card.number}</span><div className={styles.constellation} aria-hidden="true"><i/><i/><i/><i/></div><span className={styles.cardSymbol}>{card.symbol}</span><div className={styles.horizon}/><p>{card.name}</p></>}</div>{!frontCardAsset && clip && <a className={styles.pexelsCredit} href={clip.page} target="_blank" rel="noreferrer">Video by {clip.creator} on Pexels</a>}</div>
         <article className={styles.readingCopy}><p className={styles.eyebrow}>YOUR CARD</p><h3>{card.name}</h3><h4>{card.invitation}</h4><p>{card.message}</p><blockquote>“{card.prompt}”</blockquote><div className={styles.deeper}><p>Your single card opens the door. A personal reading explores what lies beyond it.</p><button type="button" onClick={onContinue}>Go deeper with MagJacky <span>→</span></button></div><small>For reflection and entertainment. You remain the author of every choice.</small></article>
       </div>}
     </div>}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import styles from "./TarotExperience.module.css";
 
@@ -50,6 +50,7 @@ const clips: PexelsClip[] = [
   { src: "https://videos.pexels.com/video-files/5898221/5898221-hd_1280_720_60fps.mp4", page: "https://www.pexels.com/video/slow-motion-video-of-a-lightning-storm-5898221/", creator: "Md Arif", label: "Lightning crossing a night sky" },
 ];
 const clipByCard = [0, 1, 2, 3, 4, 4, 5, 0, 2, 1, 5, 4, 5, 6, 3, 2, 6, 5, 5, 0, 1, 0];
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const seed = (value: string) => [...value].reduce((sum, char, i) => sum + char.charCodeAt(0) * (i + 11), 0);
 
 export default function TarotExperience({ onContinue }: { onContinue: () => void }) {
@@ -60,13 +61,18 @@ export default function TarotExperience({ onContinue }: { onContinue: () => void
   const [slot, setSlot] = useState<number | null>(null);
   const revealRef = useRef<HTMLDivElement>(null);
   const deckRef = useRef<HTMLDivElement>(null);
+  const dayPickerRef = useRef<HTMLDivElement>(null);
+  const yearSelectRef = useRef<HTMLSelectElement>(null);
   const currentYear = useMemo(() => new Date().getFullYear(), []);
-  const daysInMonth = month && year ? new Date(Number(year), Number(month), 0).getDate() : 31;
-  const birthday = month && day && year ? `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}` : "";
+  const daysInMonth = month ? new Date(Number(year || 2024), Number(month), 0).getDate() : 31;
+  const hasValidDate = Boolean(month && day && year && Number(day) <= daysInMonth);
+  const birthday = hasValidDate ? `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}` : "";
   const cardIndex = slot === null ? null : (seed(birthday) + slot * 17) % cards.length;
   const card = cardIndex === null ? null : cards[cardIndex];
   const frontCardAsset = cardIndex === null ? null : frontCardAssets[cardIndex];
   const clip = cardIndex === null ? null : clips[clipByCard[cardIndex]];
+  useEffect(() => { if (month && !day) dayPickerRef.current?.querySelector<HTMLButtonElement>("button")?.focus(); }, [month, day]);
+  useEffect(() => { if (day && !year) yearSelectRef.current?.focus(); }, [day, year]);
   const unlock = () => { if (!birthday) return; setStarted(true); setTimeout(() => document.getElementById("tarot-deck")?.scrollIntoView({ behavior: "smooth", block: "center" }), 80); };
   const choose = (index: number) => { if (slot !== null) return; setSlot(index); setTimeout(() => revealRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 800); };
   const moveDeck = (direction: -1 | 1) => deckRef.current?.scrollBy({ left: direction * Math.min(window.innerWidth * .72, 640), behavior: "smooth" });
@@ -76,12 +82,12 @@ export default function TarotExperience({ onContinue }: { onContinue: () => void
     <header className={styles.header}><p className={styles.eyebrow}>A MAGJACKY CARD RITUAL</p><h2 id="card-reading-title">Meet the message<br/><em>meant for this moment.</em></h2><p>One birthday. One intuitive choice. One original card to carry with you.</p></header>
     {!started ? <div className={styles.birthGate}>
       <div className={styles.step}><span>01</span><p>Begin with your birthday</p></div>
-      <fieldset><legend>Your birthday</legend><div className={styles.dateFields}>
-        <label><span>Month</span><select aria-label="Birth month" value={month} onChange={e=>setMonth(e.target.value)}><option value="">Month</option>{["January","February","March","April","May","June","July","August","September","October","November","December"].map((name,i)=><option value={String(i+1)} key={name}>{name}</option>)}</select></label>
-        <label><span>Day</span><select aria-label="Birth day" value={day} onChange={e=>setDay(e.target.value)}><option value="">Day</option>{Array.from({length:daysInMonth},(_,i)=><option value={String(i+1)} key={i+1}>{i+1}</option>)}</select></label>
-        <label><span>Year</span><select aria-label="Birth year" value={year} onChange={e=>setYear(e.target.value)}><option value="">Year</option>{Array.from({length:currentYear-1899},(_,i)=>currentYear-i).map(value=><option value={String(value)} key={value}>{value}</option>)}</select></label>
-      </div></fieldset>
-      <p className={styles.privacy}>Used only to personalize this moment. It is not saved.</p><button type="button" disabled={!birthday} onClick={unlock}>Open the deck <span>→</span></button>
+      <fieldset><legend>Your birthday</legend><div className={styles.dateProgress} aria-label="Birthday progress"><span className={styles.active}>1 · Month</span><span className={month ? styles.active : ""}>2 · Day</span><span className={day ? styles.active : ""}>3 · Year</span></div>
+        <section className={styles.dateStep}><p>First, choose your birth month.</p><div className={styles.monthChoices}>{monthNames.map((name,i)=><button type="button" key={name} className={month===String(i+1) ? styles.selected : ""} aria-pressed={month===String(i+1)} onClick={()=>{const nextMonth=String(i+1); setMonth(nextMonth); if(Number(day)>new Date(Number(year||2024),Number(nextMonth),0).getDate()) setDay("");}}>{name.slice(0,3)}</button>)}</div></section>
+        {month && <section className={styles.dateStep} ref={dayPickerRef}><p>Now, choose the day.</p><div className={styles.dayChoices}>{Array.from({length:daysInMonth},(_,i)=>i+1).map(value=><button type="button" key={value} className={day===String(value) ? styles.selected : ""} aria-pressed={day===String(value)} onClick={()=>setDay(String(value))}>{value}</button>)}</div></section>}
+        {day && <section className={styles.dateStep}><p>Finally, choose the year.</p><label className={styles.yearChoice}><span>Birth year</span><select ref={yearSelectRef} value={year} onChange={e=>{const nextYear=e.target.value; setYear(nextYear); if(Number(day)>new Date(Number(nextYear),Number(month),0).getDate()) setDay("");}}><option value="">Year</option>{Array.from({length:currentYear-1899},(_,i)=>currentYear-i).map(value=><option value={String(value)} key={value}>{value}</option>)}</select></label></section>}
+      </fieldset>
+      <p className={styles.privacy}>Used only to personalize this moment. It is not saved.</p><button type="button" disabled={!hasValidDate} onClick={unlock}>Open the deck <span>→</span></button>
     </div> : <div className={styles.deckJourney} id="tarot-deck">
       <div className={styles.deckIntro}><p><span>02</span> Choose without overthinking</p><h3>{card ? "Your card has found you." : "Move through the deck. Tap the card that pulls you in."}</h3></div>
       <div className={`${styles.deckStage} ${card ? styles.dimmed : ""}`} aria-label="Choose one Major Arcana card">

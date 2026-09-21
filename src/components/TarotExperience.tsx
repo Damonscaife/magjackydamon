@@ -37,7 +37,7 @@ const frontCardAssets = [
   "/cards/the-fool.png", "/cards/the-magician.png", "/cards/the-high-priestess.png", "/cards/the-empress.png",
   "/cards/the-emperor.png", "/cards/the-hierophant.png", "/cards/the-lovers.png", "/cards/the-chariot.png",
   "/cards/strength.png", "/cards/the-hermit.png", "/cards/wheel-of-fortune.png", "/cards/justice.png", "/cards/the-hanged-man.png",
-  "/cards/death.png", "/cards/temperance.png", "/cards/the-devil.png", "/cards/the-tower.png", null,
+  "/cards/death.png", "/cards/temperance.png", "/cards/the-devil.png", "/cards/the-tower.png", "/cards/the-star.png",
   "/cards/the-moon.png", "/cards/the-sun.png", "/cards/judgement.png", "/cards/the-world.png",
 ];
 const clips: PexelsClip[] = [

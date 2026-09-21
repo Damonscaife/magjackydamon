@@ -36,7 +36,7 @@ const cards: Card[] = majors;
 const frontCardAssets = [
   "/cards/the-fool.png", "/cards/the-magician.png", "/cards/the-high-priestess.png", "/cards/the-empress.png",
   "/cards/the-emperor.png", "/cards/the-hierophant.png", "/cards/the-lovers.png", "/cards/the-chariot.png",
-  "/cards/strength.png", "/cards/the-hermit.png", null, "/cards/justice.png", "/cards/the-hanged-man.png",
+  "/cards/strength.png", "/cards/the-hermit.png", "/cards/wheel-of-fortune.png", "/cards/justice.png", "/cards/the-hanged-man.png",
   "/cards/death.png", "/cards/temperance.png", "/cards/the-devil.png", "/cards/the-tower.png", null,
   "/cards/the-moon.png", "/cards/the-sun.png", "/cards/judgement.png", "/cards/the-world.png",
 ];
@@ -96,7 +96,7 @@ export default function TarotExperience({ onContinue }: { onContinue: () => void
         </div>{!card && <div className={styles.deckControls}><button type="button" onClick={()=>moveDeck(-1)} aria-label="Move deck left">←</button><p>Swipe, drag, scroll, or use the arrows</p><button type="button" onClick={()=>moveDeck(1)} aria-label="Move deck right">→</button></div>}
       </div>
       {card && <div className={styles.reveal} ref={revealRef} aria-live="polite">
-        <div className={styles.focusCard}><div className={styles.cardFace}>{frontCardAsset ? <Image className={styles.cardArtwork} src={frontCardAsset} alt={`${card.name} tarot card`} fill sizes="(max-width: 760px) 78vw, 360px" priority/> : <><video key={clip?.src} autoPlay loop muted playsInline preload="metadata" aria-label={clip?.label}><source src={clip?.src} type="video/mp4"/></video><div className={styles.videoVeil}/><span className={styles.cardNumber}>{card.number}</span><div className={styles.constellation} aria-hidden="true"><i/><i/><i/><i/></div><span className={styles.cardSymbol}>{card.symbol}</span><div className={styles.horizon}/><p>{card.name}</p></>}</div>{!frontCardAsset && clip && <a className={styles.pexelsCredit} href={clip.page} target="_blank" rel="noreferrer">Video by {clip.creator} on Pexels</a>}</div>
+        <div className={styles.focusCard}><div className={`${styles.cardFace} ${frontCardAsset ? styles.artworkFace : ""}`}>{frontCardAsset ? <Image className={styles.cardArtwork} src={frontCardAsset} alt={`${card.name} tarot card`} fill sizes="(max-width: 760px) 78vw, 360px" priority/> : <><video key={clip?.src} autoPlay loop muted playsInline preload="metadata" aria-label={clip?.label}><source src={clip?.src} type="video/mp4"/></video><div className={styles.videoVeil}/><span className={styles.cardNumber}>{card.number}</span><div className={styles.constellation} aria-hidden="true"><i/><i/><i/><i/></div><span className={styles.cardSymbol}>{card.symbol}</span><div className={styles.horizon}/><p>{card.name}</p></>}</div>{!frontCardAsset && clip && <a className={styles.pexelsCredit} href={clip.page} target="_blank" rel="noreferrer">Video by {clip.creator} on Pexels</a>}</div>
         <article className={styles.readingCopy}><p className={styles.eyebrow}>YOUR CARD</p><h3>{card.name}</h3><h4>{card.invitation}</h4><p>{card.message}</p><blockquote>“{card.prompt}”</blockquote><div className={styles.deeper}><p>Your single card opens the door. A personal reading explores what lies beyond it.</p><button type="button" onClick={onContinue}>Go deeper with MagJacky <span>→</span></button></div><small>For reflection and entertainment. You remain the author of every choice.</small></article>
       </div>}
     </div>}

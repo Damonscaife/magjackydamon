@@ -64,6 +64,65 @@ export default function DailyCosmicPortal() {
     window.localStorage.setItem(STORAGE_KEY, String(index));
   }
 
+  async function createShareImage() {
+    if (!dailyCard) return null;
+    const [name, symbol, invitation, imageSource] = dailyCard;
+    const artwork = new window.Image();
+    artwork.src = imageSource;
+    await new Promise<void>((resolve, reject) => {
+      artwork.onload = () => resolve();
+      artwork.onerror = () => reject(new Error("Card artwork could not load."));
+    });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 1080;
+    canvas.height = 1350;
+    const context = canvas.getContext("2d");
+    if (!context) return null;
+
+    const background = context.createLinearGradient(0, 0, 1080, 1350);
+    background.addColorStop(0, "#2d1b2a");
+    background.addColorStop(0.55, "#120c15");
+    background.addColorStop(1, "#080709");
+    context.fillStyle = background;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.strokeStyle = "#c7a76a";
+    context.lineWidth = 3;
+    context.strokeRect(42, 42, 996, 1266);
+
+    context.fillStyle = "#c7a76a";
+    context.font = "600 26px Georgia, serif";
+    context.letterSpacing = "5px";
+    context.textAlign = "center";
+    context.fillText("MAGJACKY • TODAY’S TAROT", 540, 105);
+    context.drawImage(artwork, 360, 155, 360, 628);
+
+    context.font = "52px Georgia, serif";
+    context.fillText(symbol, 540, 860);
+    context.fillStyle = "#f2eadc";
+    context.font = "58px Georgia, serif";
+    context.fillText(name, 540, 940);
+    context.fillStyle = "#e9dfd5";
+    context.font = "italic 34px Georgia, serif";
+    const words = invitation.split(" ");
+    const lines: string[] = [];
+    let line = "";
+    words.forEach((word) => {
+      const candidate = line ? `${line} ${word}` : word;
+      if (context.measureText(candidate).width > 820 && line) {
+        lines.push(line);
+        line = word;
+      } else line = candidate;
+    });
+    if (line) lines.push(line);
+    lines.forEach((text, index) => context.fillText(text, 540, 1025 + index * 48));
+    context.fillStyle = "#c7a76a";
+    context.font = "600 24px Georgia, serif";
+    context.fillText("MAGJACKY.COM", 540, 1225);
+
+    return new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
+  }
+
   async function shareDailyCard() {
     if (!dailyCard) return;
     const [name, , invitation] = dailyCard;
@@ -71,9 +130,20 @@ export default function DailyCosmicPortal() {
     const url = `${window.location.origin}/#daily-reading`;
 
     try {
-      if (navigator.share) {
-        await navigator.share({ title: "Today’s MagJacky card", text, url });
+      const image = await createShareImage();
+      const file = image ? new File([image], `magjacky-${name.toLowerCase().replaceAll(" ", "-")}.png`, { type: "image/png" }) : null;
+      const shareData = file ? { title: "Today’s MagJacky card", text, url, files: [file] } : { title: "Today’s MagJacky card", text, url };
+      if (navigator.share && (!file || navigator.canShare?.(shareData))) {
+        await navigator.share(shareData);
         setShareStatus("Shared.");
+      } else if (file) {
+        const downloadUrl = URL.createObjectURL(file);
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.download = file.name;
+        link.click();
+        URL.revokeObjectURL(downloadUrl);
+        setShareStatus("Image downloaded — add it to Instagram.");
       } else {
         await navigator.clipboard.writeText(`${text} ${url}`);
         setShareStatus("Link copied.");
@@ -103,7 +173,7 @@ export default function DailyCosmicPortal() {
             <p className={styles.dailyCardSymbol} aria-hidden="true">{dailyCard[1]}</p>
             <h3 id="daily-card-title">{dailyCard[0]}</h3>
             <p>{dailyCard[2]}</p>
-            <button type="button" onClick={shareDailyCard}>Share today’s card <span>→</span></button>
+            <button type="button" onClick={shareDailyCard}>Share to Instagram <span>↗</span></button>
             <span className={styles.shareStatus} aria-live="polite">{shareStatus}</span>
           </div>
         </article>}

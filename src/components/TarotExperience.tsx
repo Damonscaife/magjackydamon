@@ -54,6 +54,7 @@ const monthNames = ["January", "February", "March", "April", "May", "June", "Jul
 const seed = (value: string) => [...value].reduce((sum, char, i) => sum + char.charCodeAt(0) * (i + 11), 0);
 
 export default function TarotExperience({ onContinue }: { onContinue: () => void }) {
+  const [question, setQuestion] = useState("");
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
   const [year, setYear] = useState("");
@@ -71,25 +72,35 @@ export default function TarotExperience({ onContinue }: { onContinue: () => void
   const card = cardIndex === null ? null : cards[cardIndex];
   const frontCardAsset = cardIndex === null ? null : frontCardAssets[cardIndex];
   const clip = cardIndex === null ? null : clips[clipByCard[cardIndex]];
+  const questionFocus = useMemo(() => {
+    const words = question.toLowerCase();
+    if (/love|relationship|partner|dating|heart/.test(words)) return "In this connection, let this card guide the next honest step—not a rushed answer.";
+    if (/work|career|job|business|money|finance/.test(words)) return "For your work and resources, use this message to choose the next practical move with care.";
+    if (/family|friend|mother|father|child/.test(words)) return "In this relationship, make room for both truth and tenderness as you decide what to do next.";
+    return "Hold this message beside your question and notice what feels most true for you right now.";
+  }, [question]);
   useEffect(() => { if (month && !day) dayPickerRef.current?.querySelector<HTMLButtonElement>("button")?.focus(); }, [month, day]);
   useEffect(() => { if (day && !year) yearSelectRef.current?.focus(); }, [day, year]);
-  const unlock = () => { if (!birthday) return; setStarted(true); setTimeout(() => document.getElementById("tarot-deck")?.scrollIntoView({ behavior: "smooth", block: "center" }), 80); };
+  const unlock = () => { if (!birthday || !question.trim()) return; setStarted(true); setTimeout(() => document.getElementById("tarot-deck")?.scrollIntoView({ behavior: "smooth", block: "center" }), 80); };
   const choose = (index: number) => { if (slot !== null) return; setSlot(index); setTimeout(() => revealRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 800); };
   const moveDeck = (direction: -1 | 1) => deckRef.current?.scrollBy({ left: direction * Math.min(window.innerWidth * .72, 640), behavior: "smooth" });
 
   return <section className={styles.experience} id="card-reading" aria-labelledby="card-reading-title">
     <div className={styles.stars} aria-hidden="true"><i/><i/><i/><span/><span/></div>
-    <header className={styles.header}><p className={styles.eyebrow}>A MAGJACKY CARD RITUAL</p><h2 id="card-reading-title">Meet the message<br/><em>meant for this moment.</em></h2><p>One birthday. One intuitive choice. One original card to carry with you.</p></header>
+    <header className={styles.header}><p className={styles.eyebrow}>A MAGJACKY CARD RITUAL</p><h2 id="card-reading-title">Ask your question.<br/><em>Pick your card.</em></h2><p>Bring what is on your mind, then choose the card that pulls you in.</p></header>
     {!started ? <div className={styles.birthGate}>
-      <div className={styles.step}><span>01</span><p>Begin with your birthday</p></div>
+      <div className={styles.step}><span>01</span><p>Set your intention</p></div>
+      <label className={styles.questionField}><span>What would you like clarity about?</span><textarea value={question} onChange={event=>setQuestion(event.target.value)} rows={3} maxLength={300} placeholder="I’m looking for clarity about…" /></label>
+      <p className={styles.questionHint}>Keep your question close as you choose your card. It is not saved.</p>
+      <div className={styles.step}><span>02</span><p>Add your birthday for a personal draw</p></div>
       <fieldset><legend>Your birthday</legend><div className={styles.dateProgress} aria-label="Birthday progress"><span className={styles.active}>1 · Month</span><span className={month ? styles.active : ""}>2 · Day</span><span className={day ? styles.active : ""}>3 · Year</span></div>
         <section className={styles.dateStep}><p>First, choose your birth month.</p><div className={styles.monthChoices}>{monthNames.map((name,i)=><button type="button" key={name} className={month===String(i+1) ? styles.selected : ""} aria-pressed={month===String(i+1)} onClick={()=>{const nextMonth=String(i+1); setMonth(nextMonth); if(Number(day)>new Date(Number(year||2024),Number(nextMonth),0).getDate()) setDay("");}}>{name.slice(0,3)}</button>)}</div></section>
         {month && <section className={styles.dateStep} ref={dayPickerRef}><p>Now, choose the day.</p><div className={styles.dayChoices}>{Array.from({length:daysInMonth},(_,i)=>i+1).map(value=><button type="button" key={value} className={day===String(value) ? styles.selected : ""} aria-pressed={day===String(value)} onClick={()=>setDay(String(value))}>{value}</button>)}</div></section>}
         {day && <section className={styles.dateStep}><p>Finally, choose the year.</p><label className={styles.yearChoice}><span>Birth year</span><select ref={yearSelectRef} value={year} onChange={e=>{const nextYear=e.target.value; setYear(nextYear); if(Number(day)>new Date(Number(nextYear),Number(month),0).getDate()) setDay("");}}><option value="">Year</option>{Array.from({length:currentYear-1899},(_,i)=>currentYear-i).map(value=><option value={String(value)} key={value}>{value}</option>)}</select></label></section>}
       </fieldset>
-      <p className={styles.privacy}>Used only to personalize this moment. It is not saved.</p><button type="button" disabled={!hasValidDate} onClick={unlock}>Open the deck <span>→</span></button>
+      <p className={styles.privacy}>Used only to personalize this moment. It is not saved.</p><button type="button" disabled={!hasValidDate || !question.trim()} onClick={unlock}>Choose your card <span>→</span></button>
     </div> : <div className={styles.deckJourney} id="tarot-deck">
-      <div className={styles.deckIntro}><p><span>02</span> Choose without overthinking</p><h3>{card ? "Your card has found you." : "Move through the deck. Tap the card that pulls you in."}</h3></div>
+      <div className={styles.deckIntro}><p><span>03</span> Choose without overthinking</p><h3>{card ? "Your card has found you." : "Move through the deck. Tap the card that pulls you in."}</h3></div>
       <div className={`${styles.deckStage} ${card ? styles.dimmed : ""}`} aria-label="Choose one Major Arcana card">
         <div className={styles.deckRail} ref={deckRef} onWheel={event=>{if(Math.abs(event.deltaY)>Math.abs(event.deltaX)){event.preventDefault();event.currentTarget.scrollLeft+=event.deltaY;}}}>
           {Array.from({length:22},(_,i)=><button type="button" className={styles.cardBack} style={{"--i":i} as CSSProperties} key={i} onClick={()=>choose(i)} aria-label={`Choose Major Arcana card ${i+1} of 22`} disabled={slot!==null}><Image src="/cards/back.png" alt="" fill sizes="(max-width: 760px) 112px, 145px" priority={i < 6}/></button>)}
@@ -97,7 +108,7 @@ export default function TarotExperience({ onContinue }: { onContinue: () => void
       </div>
       {card && <div className={styles.reveal} ref={revealRef} aria-live="polite">
         <div className={styles.focusCard}><div className={`${styles.cardFace} ${frontCardAsset ? styles.artworkFace : ""}`}>{frontCardAsset ? <Image className={styles.cardArtwork} src={frontCardAsset} alt={`${card.name} tarot card`} fill sizes="(max-width: 760px) 78vw, 360px" priority/> : <><video key={clip?.src} autoPlay loop muted playsInline preload="metadata" aria-label={clip?.label}><source src={clip?.src} type="video/mp4"/></video><div className={styles.videoVeil}/><span className={styles.cardNumber}>{card.number}</span><div className={styles.constellation} aria-hidden="true"><i/><i/><i/><i/></div><span className={styles.cardSymbol}>{card.symbol}</span><div className={styles.horizon}/><p>{card.name}</p></>}</div>{!frontCardAsset && clip && <a className={styles.pexelsCredit} href={clip.page} target="_blank" rel="noreferrer">Video by {clip.creator} on Pexels</a>}</div>
-        <article className={styles.readingCopy}><p className={styles.eyebrow}>YOUR CARD</p><h3>{card.name}</h3><h4>{card.invitation}</h4><p>{card.message}</p><blockquote>“{card.prompt}”</blockquote><div className={styles.deeper}><p>Your single card opens the door. A personal reading explores what lies beyond it.</p><button type="button" onClick={onContinue}>Go deeper with MagJacky <span>→</span></button></div><small>For reflection and entertainment. You remain the author of every choice.</small></article>
+        <article className={styles.readingCopy}><p className={styles.eyebrow}>YOUR CARD</p><h3>{card.name}</h3><h4>{card.invitation}</h4><p>{card.message}</p><div className={styles.questionReflection}><span>Your question</span><p>“{question}”</p><p>{questionFocus}</p></div><blockquote>“{card.prompt}”</blockquote><div className={styles.deeper}><p>Your single card opens the door. A personal reading explores what lies beyond it.</p><button type="button" onClick={onContinue}>Go deeper with MagJacky <span>→</span></button></div><small>For reflection and entertainment. You remain the author of every choice.</small></article>
       </div>}
     </div>}
   </section>;
